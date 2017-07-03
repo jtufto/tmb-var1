@@ -15,11 +15,11 @@ Type objective_function<Type>::operator() ()
   
   // Phi parameterized in terms
   PARAMETER_VECTOR(theta);
-  PARAMETER_VECTOR(logit_eigval); vector<Type> eigval = 2/(1+exp(-logit_eigval)-1); // eigenvalues
+  PARAMETER_VECTOR(logit_eigval); vector<Type> eigval = 2/(1+exp(-logit_eigval))-1; // eigenvalues
   
   matrix<Type> eigvec(2,2);
-  eigvec(0,0) = cos(theta(0)); eigvec(1,0) = cos(theta(1));
-  eigvec(0,1) = sin(theta(0)); eigvec(1,1) = sin(theta(1));
+  eigvec(0,0) = cos(theta(0)); eigvec(0,1) = cos(theta(1));
+  eigvec(1,0) = sin(theta(0)); eigvec(1,1) = sin(theta(1));
   
   matrix<Type> D(2,2);
   D(0,0) = eigval(0); D(0,1) = 0;
@@ -30,12 +30,12 @@ Type objective_function<Type>::operator() ()
   Type nll = 0;
 
   // Density of VAR(1) process random effects x
-  vector<Type> xt = 0;
   for (int t=1; t<x.rows(); t++) {
-    vector<Type> mean = Phi * xt;
-    xt(0) = x(t,0);
-    xt(1) = x(t,1);
-    nll -= VECSCALE(UNSTRUCTURED_CORR(rho),sigma)(xt - mean);
+    vector<Type> xt = x.row(t);
+    vector<Type> xtminus1 = x.row(t-1);
+    vector<Type> Phix = Phi*xtminus1;
+    vector<Type> error = xt - Phix;
+    nll -= VECSCALE(UNSTRUCTURED_CORR(rho),sigma)(error);
   }
   // Conditional density of observations y given x
   for (int t=0; t<y.rows(); t++) {
