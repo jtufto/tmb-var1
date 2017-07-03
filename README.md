@@ -1,2 +1,2 @@
 # tmb-var1
-Implementation of a stationary vector AR(1) process in Template Model Builder
+Toy example implementation of a stationary vector AR(1) process random effect in Template Model Builder
