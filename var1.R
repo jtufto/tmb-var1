@@ -35,8 +35,9 @@ library(TMB)
 compile("var1.cpp")
 dyn.load(dynlib("var1"))
 data <- list(y=y)
+burnin <- 100 
 parameters <- list(
-  x = matrix(0,nrow(y),2),
+  x = matrix(0,nrow(y)+burnin,2),
   logsdy = 0,
   log_sigma = c(0,0),
   rho = 0,
