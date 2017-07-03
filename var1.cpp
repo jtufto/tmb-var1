@@ -30,6 +30,8 @@ Type objective_function<Type>::operator() ()
   Type nll = 0;
 
   // Density of VAR(1) process random effects x
+  vector<Type> x0 = x.row(0);
+  nll -= sum(dnorm(x0, Type(0), Type(1), true));
   for (int t=1; t<x.rows(); t++) {
     vector<Type> xt = x.row(t);
     vector<Type> xtminus1 = x.row(t-1);

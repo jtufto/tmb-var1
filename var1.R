@@ -46,7 +46,8 @@ parameters <- list(
   theta = c(0, pi/2), 
   logit_eigval = qlogis((lambda+1)/2)
 )
-obj <- MakeADFun(data,parameters,random="x")
+map <- list(theta = factor(c(NA,NA)))
+obj <- MakeADFun(data,parameters,map,random="x")
 obj$method="BFGS"
 opt <- do.call(optim,obj)
 sdreport(obj)
