@@ -7,10 +7,10 @@ Type objective_function<Type>::operator() ()
   DATA_MATRIX(y);
   
   PARAMETER_MATRIX(x);
-  PARAMETER(logsdy); Type sdy = exp(logsdy);
+  PARAMETER(logsdy); Type sdy = exp(logsdy); ADREPORT(sdy);
   
   // Sigma parameterized in terms of log of the two sd's and logit2 of rho
-  PARAMETER_VECTOR(log_sigma); vector<Type> sigma = exp(log_sigma);
+  PARAMETER_VECTOR(log_sigma); vector<Type> sigma = exp(log_sigma); ADREPORT(sigma);
   PARAMETER_VECTOR(rho);
   
   // Phi parameterized in terms
@@ -25,7 +25,7 @@ Type objective_function<Type>::operator() ()
   D(0,0) = eigval(0); D(0,1) = 0;
   D(1,0) = 0;         D(1,1) = eigval(1);
   
-  matrix<Type> Phi = eigvec * D * eigvec.inverse();
+  matrix<Type> Phi = eigvec * D * eigvec.inverse(); ADREPORT(Phi);
   
   Type nll = 0;
 

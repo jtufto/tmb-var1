@@ -23,7 +23,7 @@ Gamma0 <- matrix(Gamma0,2,2)
 Gamma0
 
 # Simulate some data
-n <- 500
+n <- 100
 x <- matrix(NA,n,2)
 x[1,] <- mvtnorm::rmvnorm(1,sigma=Gamma0)
 for (t in 2:n) 
@@ -50,8 +50,9 @@ parameters <- list(
   theta = c(0, pi/2), 
   logit_eigval = qlogis((lambda+1)/2)
 )
-map <- list(theta = factor(c(NA,NA)))
-obj <- MakeADFun(data,parameters,map,random="x")
+map <- list(rho = factor(c(NA)), log_sigma=c(1,NA))
+obj <- MakeADFun(data,parameters,random="x")
 obj$method="BFGS"
 opt <- do.call(optim,obj)
+summary(sdreport(obj),"report")
 sdreport(obj)
