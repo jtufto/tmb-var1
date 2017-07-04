@@ -30,14 +30,14 @@ Type objective_function<Type>::operator() ()
   Type nll = 0;
 
   // Density of VAR(1) process random effects x
-  vector<Type> x0 = x.row(0);
-  nll -= sum(dnorm(x0, Type(0), Type(1), true));
+  nll -= dnorm(x(0,0), Type(0), Type(1), true);
+  nll -= dnorm(x(0,1), Type(0), Type(1), true);
   for (int t=1; t<x.rows(); t++) {
     vector<Type> xt = x.row(t);
     vector<Type> xtminus1 = x.row(t-1);
     vector<Type> Phix = Phi*xtminus1;
     vector<Type> error = xt - Phix;
-    nll -= VECSCALE(UNSTRUCTURED_CORR(rho),sigma)(error);
+    nll += VECSCALE(UNSTRUCTURED_CORR(rho),sigma)(error); // UNSTRUCTURED_CORR returns the negative log lik!
   }
   // Conditional density of observations y given x
   for (int t=0; t<y.rows(); t++) {

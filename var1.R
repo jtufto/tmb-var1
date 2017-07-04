@@ -1,11 +1,15 @@
 # VAR(1) in TMB
 # assuming that Phi has real eigenvalues 
-theta <- c(0,pi/2)
-lambda <- c(.5,.2)
-vec <- matrix(c(cos(theta),sin(theta)),2,2,byrow=FALSE)
+Phi <- matrix(c(.9,.1,-.2,.3),2,2)
+eig <- eigen(Phi)
+theta <- atan2(eig$vectors[2,],eig$vectors[1,])
+lambda <- eig$values
+
+#theta <- 0
+#lambda <- c(.5,.2)
+vec <- matrix(c(cos(theta),sin(theta)),2,2,byrow=TRUE)
 Phi <- vec %*% diag(lambda) %*% solve(vec)
 Phi
-eigen(Phi)
 
 rho <- -.5
 sigma <- c(2,3)
@@ -37,7 +41,7 @@ library(TMB)
 compile("var1.cpp")
 dyn.load(dynlib("var1"))
 data <- list(y=y)
-burnin <- 10
+burnin <- 20
 parameters <- list(
   x = matrix(0,nrow(y)+burnin, 2),
   logsdy = log(sdy),
