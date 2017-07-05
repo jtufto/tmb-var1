@@ -27,15 +27,15 @@ Type objective_function<Type>::operator() ()
   
   // Phi parameterized in terms
   PARAMETER_VECTOR(theta);
-  PARAMETER_VECTOR(logit_eigval); vector<Type> eigval = 2/(1+exp(-logit_eigval))-1; // eigenvalues
+  PARAMETER_VECTOR(logit_lambda); vector<Type> lambda = 2/(1+exp(-logit_lambda))-1; ADREPORT(lambda)
   
   matrix<Type> eigvec(2,2);
   eigvec(0,0) = cos(theta(0)); eigvec(0,1) = cos(theta(1));
   eigvec(1,0) = sin(theta(0)); eigvec(1,1) = sin(theta(1));
   
   matrix<Type> D(2,2);
-  D(0,0) = eigval(0); D(0,1) = 0;
-  D(1,0) = 0;         D(1,1) = eigval(1);
+  D(0,0) = lambda(0); D(0,1) = 0;
+  D(1,0) = 0;         D(1,1) = lambda(1);
   
   matrix<Type> Phi = eigvec * D * eigvec.inverse(); ADREPORT(Phi);
   
