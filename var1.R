@@ -4,9 +4,6 @@ Phi <- matrix(c(.9,.1,-.2,.3),2,2)
 eig <- eigen(Phi)
 theta <- atan2(eig$vectors[2,],eig$vectors[1,])
 lambda <- eig$values
-
-#theta <- 0
-#lambda <- c(.5,.2)
 vec <- matrix(c(cos(theta),sin(theta)),2,2,byrow=TRUE)
 Phi <- vec %*% diag(lambda) %*% solve(vec)
 Phi
@@ -41,18 +38,19 @@ library(TMB)
 compile("var1.cpp")
 dyn.load(dynlib("var1"))
 data <- list(y=y)
-burnin <- 20
 parameters <- list(
-  x = matrix(0,nrow(y)+burnin, 2),
+  x = matrix(0,nrow(y), 2),
   logsdy = log(sdy),
   log_sigma = log(sigma),
   rho = rho,
   theta = c(0, pi/2), 
   logit_eigval = qlogis((lambda+1)/2)
 )
-map <- list(rho = factor(c(NA)), log_sigma=c(1,NA))
+map <- list(rho = factor(c(NA)))
 obj <- MakeADFun(data,parameters,random="x")
 obj$method="BFGS"
 opt <- do.call(optim,obj)
-summary(sdreport(obj),"report")
-sdreport(obj)
+rep <- sdreport(obj)
+summary(rep,"report")
+Phi
+Sigma
