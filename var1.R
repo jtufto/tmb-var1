@@ -20,7 +20,7 @@ Gamma0 <- matrix(Gamma0,2,2)
 Gamma0
 
 # Simulate some data
-n <- 300
+n <- 1000
 x <- matrix(NA,n,2)
 x[1,] <- mvtnorm::rmvnorm(1,sigma=Gamma0)
 for (t in 2:n) 
